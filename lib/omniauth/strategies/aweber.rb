@@ -11,6 +11,23 @@ module OmniAuth
           access_token_path:  '/oauth/access_token',
           scheme: :query_string
       }
+
+      uid{ raw_info['id'] }
+
+      info do
+        {
+            :id => raw_info['id']
+        }
+      end
+
+      extra do
+        { 'raw_info' => raw_info }
+      end
+
+      def raw_info
+        @raw_info ||= MultiJson.decode(access_token.get('https://api.aweber.com/accounts').body)['entries'].first
+      end
+
     end
   end
 end
